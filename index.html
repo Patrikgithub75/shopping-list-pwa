@@ -27,10 +27,11 @@
       color: #555;
       margin-bottom: 1rem;
     }
+
     .add-row {
       display: flex;
       gap: 0.4rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
     .add-row input {
       flex: 1;
@@ -41,7 +42,7 @@
     }
     .add-row button {
       border: none;
-      padding: 0.55rem 0.9rem;
+      padding: 0.55rem 0.7rem;
       border-radius: 8px;
       background: #007aff;
       color: #fff;
@@ -49,9 +50,45 @@
       cursor: pointer;
       white-space: nowrap;
     }
+    #voice-button {
+      background: #34c759;
+    }
     .add-row button:active {
       transform: scale(0.97);
     }
+
+    .voice-status {
+      font-size: 0.8rem;
+      color: #555;
+      min-height: 1.1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .sort-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: #444;
+    }
+    .sort-row span.label {
+      font-weight: 500;
+    }
+    .sort-btn {
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      background: #ffffff;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .sort-btn-active {
+      background: #007aff;
+      color: #fff;
+      border-color: #007aff;
+    }
+
     h2 {
       font-size: 1.05rem;
       margin: 0.8rem 0 0.4rem;
@@ -81,6 +118,7 @@
       width: 18px;
       height: 18px;
     }
+
     .pill-row {
       display: flex;
       flex-wrap: wrap;
@@ -100,12 +138,21 @@
     <h1>Familjens inköpslista</h1>
     <div class="info">
       Lägg till saker som <b>kaffe</b>, <b>toalettpapper</b> osv.<br>
-      Alla i familjen kan lägga till/ticka av i realtid.
+      Alla i familjen kan lägga till och bocka av i realtid.
     </div>
 
     <div class="add-row">
-      <input id="item-input" type="text" placeholder="Lägg till vara... (t.ex. kaffe)" />
-      <button id="add-button">Lägg till</button>
+      <input id="item-input" type="text" placeholder="Lägg till vara … (t.ex. kaffe)" />
+      <button id="voice-button" type="button">🎤</button>
+      <button id="add-button" type="button">Lägg till</button>
+    </div>
+
+    <div id="voice-status" class="voice-status"></div>
+
+    <div class="sort-row">
+      <span class="label">Sortera “Behövs nu”:</span>
+      <button id="sort-name-btn" class="sort-btn sort-btn-active" type="button">A–Ö</button>
+      <button id="sort-updated-btn" class="sort-btn" type="button">Senast ändrad</button>
     </div>
 
     <div class="section">
