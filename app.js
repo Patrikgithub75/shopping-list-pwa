@@ -5,9 +5,8 @@ import {
   getFirestore,
   collection,
   doc,
-  getDocs,
-  setDoc,
   onSnapshot,
+  setDoc,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 import {
@@ -118,4 +117,189 @@ function renderLists(items) {
 
   const active = items.filter((i) => i.needed);
   const inactive = items
-    .filter((i) => !
+    .filter((i) => !i.needed)
+    .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))
+    .slice(0, 40);
+
+  // sortera aktiva
+  if (currentSortMode === "name") {
+    active.sort((a, b) => a.name.localeCompare(b.name, "sv"));
+  } else {
+    active.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  }
+
+  // Behövs nu
+  activeListEl.innerHTML = "";
+  if (active.length === 0) {
+    activeListEl.innerHTML =
+      '<div class="empty-text">Inget behövs just nu. Lägg till något ovanför eller återaktivera från “Senast använda”.</div>';
+  } else {
+    active.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "item";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = item.needed;
+      checkbox.addEventListener("change", () => {
+        toggleNeeded(item.id, checkbox.checked);
+      });
+
+      const label = document.createElement("span");
+      label.textContent = item.name;
+
+      row.appendChild(checkbox);
+      row.appendChild(label);
+      activeListEl.appendChild(row);
+    });
+  }
+
+  // Senast använda
+  recentListEl.innerHTML = "";
+  if (inactive.length === 0) {
+    recentListEl.innerHTML =
+      '<div class="empty-text">Här hamnar varor du bockar av, t.ex. kaffe och toalettpapper.</div>';
+  } else {
+    inactive.forEach((item) => {
+      const pill = document.createElement("div");
+      pill.className = "pill";
+      pill.textContent = item.name;
+      pill.addEventListener("click", () => {
+        toggleNeeded(item.id, true);
+      });
+      recentListEl.appendChild(pill);
+    });
+  }
+}
+
+async function addItemFromInput() {
+  const raw = inputEl.value.trim();
+  if (!raw) return;
+  await addOrActivateItem(raw);
+  inputEl.value = "";
+}
+
+async function addOrActivateItem(name) {
+  const id = slugify(name);
+  if (!id) return;
+  const itemRef = doc(shoppingCollectionRef, id);
+  await setDoc(
+    itemRef,
+    {
+      name,
+      needed: true,
+      updatedAt: serverTimestamp()
+    },
+    { merge: true }
+  );
+}
+
+async function toggleNeeded(id, needed) {
+  const itemRef = doc(shoppingCollectionRef, id);
+  await setDoc(
+    itemRef,
+    {
+      needed,
+      updatedAt: serverTimestamp()
+    },
+    { merge: true }
+  );
+}
+
+// "Allt klart" – bocka av alla aktiva
+async function markAllDone() {
+  const toUpdate = latestItems.filter((i) => i.needed);
+  if (toUpdate.length === 0) return;
+  await Promise.all(
+    toUpdate.map((item) =>
+      setDoc(
+        doc(shoppingCollectionRef, item.id),
+        { needed: false, updatedAt: serverTimestamp() },
+        { merge: true }
+      )
+    )
+  );
+}
+
+// ---------- Firestore-subscription ----------
+function subscribeShoppingList() {
+  return onSnapshot(shoppingCollectionRef, (snapshot) => {
+    const items = [];
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      let updatedAt = null;
+      if (data.updatedAt && typeof data.updatedAt.toMillis === "function") {
+        updatedAt = data.updatedAt.toMillis();
+      }
+      items.push({
+        id: docSnap.id,
+        name: data.name || "",
+        needed: data.needed ?? true,
+        updatedAt
+      });
+    });
+    renderLists(items);
+  });
+}
+
+// ---------- Auth + start ----------
+function startApp() {
+  signInAnonymously(auth).catch((err) => {
+    console.error("Anonymous auth failed:", err);
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) return;
+    subscribeShoppingList();
+  });
+
+  setupVoice();
+}
+
+// ---------- UI handlers ----------
+addButtonEl.addEventListener("click", addItemFromInput);
+inputEl.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") {
+    addItemFromInput();
+  }
+});
+
+voiceButtonEl.addEventListener("click", () => {
+  if (!recognition) {
+    // inget Web Speech, gör inget (texten ovan tipsar om tangentbordsmic)
+    return;
+  }
+  if (isListening) {
+    recognition.stop();
+  } else {
+    recognition.start();
+  }
+});
+
+function updateSortButtons() {
+  if (currentSortMode === "name") {
+    sortNameBtn.classList.add("sort-btn-active");
+    sortUpdatedBtn.classList.remove("sort-btn-active");
+  } else {
+    sortUpdatedBtn.classList.add("sort-btn-active");
+    sortNameBtn.classList.remove("sort-btn-active");
+  }
+  if (latestItems.length) renderLists(latestItems);
+}
+
+sortNameBtn.addEventListener("click", () => {
+  currentSortMode = "name";
+  updateSortButtons();
+});
+
+sortUpdatedBtn.addEventListener("click", () => {
+  currentSortMode = "updated";
+  updateSortButtons();
+});
+
+clearAllBtn.addEventListener("click", () => {
+  markAllDone();
+});
+
+// ---------- Kör appen ----------
+startApp();
