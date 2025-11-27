@@ -4,114 +4,192 @@
   <meta charset="utf-8" />
   <title>Familjens inköpslista</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#007aff" />
+  <meta name="theme-color" content="#0f172a" />
   <link rel="manifest" href="manifest.json" />
   <style>
+    /* Bakgrund */
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f4f4f4;
-    }
-    .app {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 1rem;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 0.3rem;
-    }
-    .info {
-      text-align: center;
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 1rem;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: #0f172a;
     }
 
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    /* App-kort */
+    .app-card {
+      width: 100%;
+      max-width: 640px;
+      background: #f9fafb;
+      border-radius: 18px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.35);
+      padding: 1.25rem 1.25rem 1.4rem;
+      box-sizing: border-box;
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #0f172a;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.65rem;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .info {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-bottom: 0.9rem;
+    }
+
+    /* Inputs */
     .add-row {
       display: flex;
       gap: 0.4rem;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.45rem;
     }
     .add-row input {
       flex: 1;
       padding: 0.55rem 0.7rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      border-radius: 11px;
+      border: 1px solid #d1d5db;
       font-size: 0.95rem;
+      background: #ffffff;
+      outline: none;
     }
-    .add-row button {
+    .add-row input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.25);
+    }
+
+    .btn {
       border: none;
-      padding: 0.55rem 0.7rem;
-      border-radius: 8px;
-      background: #007aff;
-      color: #fff;
-      font-size: 0.9rem;
+      border-radius: 999px;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
       white-space: nowrap;
     }
-    #voice-button {
-      background: #34c759;
+    .btn-primary {
+      background: #0284c7;
+      color: white;
     }
-    .add-row button:active {
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+    .btn-voice {
+      background: #22c55e;
+      color: white;
+    }
+    .btn-voice:active {
+      transform: scale(0.97);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #d1d5db;
+      color: #4b5563;
+    }
+    .btn-ghost:active {
       transform: scale(0.97);
     }
 
     .voice-status {
       font-size: 0.8rem;
-      color: #555;
+      color: #4b5563;
       min-height: 1.1rem;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Sortering + Allt klart */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.9rem;
+      font-size: 0.8rem;
+      color: #4b5563;
     }
 
     .sort-row {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      margin-bottom: 1rem;
-      font-size: 0.85rem;
-      color: #444;
+      gap: 0.35rem;
     }
-    .sort-row span.label {
+    .sort-label {
       font-weight: 500;
     }
     .sort-btn {
       border-radius: 999px;
-      border: 1px solid #ccc;
+      border: 1px solid #d1d5db;
       background: #ffffff;
-      padding: 0.25rem 0.7rem;
-      font-size: 0.8rem;
+      padding: 0.18rem 0.55rem;
+      font-size: 0.78rem;
       cursor: pointer;
     }
     .sort-btn-active {
-      background: #007aff;
-      color: #fff;
-      border-color: #007aff;
+      background: #0284c7;
+      color: white;
+      border-color: #0284c7;
     }
 
+    /* Sektioner */
     h2 {
-      font-size: 1.05rem;
-      margin: 0.8rem 0 0.4rem;
+      font-size: 0.98rem;
+      margin: 0.6rem 0 0.35rem;
+      color: #111827;
     }
     .section {
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
+
     .item-list {
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.3rem;
     }
     .item {
       display: flex;
       align-items: center;
       padding: 0.45rem 0.6rem;
-      border-radius: 8px;
+      border-radius: 11px;
       background: #ffffff;
+      border: 1px solid #e5e7eb;
     }
     .item span {
       flex: 1;
       font-size: 0.95rem;
       word-break: break-word;
+      color: #111827;
     }
     .item input[type="checkbox"] {
       margin-right: 0.6rem;
@@ -125,44 +203,73 @@
       gap: 0.35rem;
     }
     .pill {
-      padding: 0.25rem 0.6rem;
+      padding: 0.22rem 0.6rem;
       border-radius: 999px;
-      background: #e0eaff;
-      font-size: 0.85rem;
+      background: #e0e7ff;
+      border: 1px solid #c7d2fe;
+      font-size: 0.82rem;
       cursor: pointer;
+      color: #312e81;
+    }
+
+    .empty-text {
+      font-size: 0.83rem;
+      color: #6b7280;
+    }
+
+    @media (max-width: 480px) {
+      .app-card {
+        padding: 0.9rem 0.85rem 1.1rem;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1>Familjens inköpslista</h1>
-    <div class="info">
-      Lägg till saker som <b>kaffe</b>, <b>toalettpapper</b> osv.<br>
-      Alla i familjen kan lägga till och bocka av i realtid.
-    </div>
+  <div class="page-wrap">
+    <div class="app-card">
+      <div class="app-header">
+        <h1>Familjens inköpslista</h1>
+        <div class="badge">Delad lista</div>
+      </div>
+      <div class="info">
+        Lägg till saker som <b>kaffe</b>, <b>toalettpapper</b> osv.
+        Alla i familjen kan ändra listan i realtid.
+      </div>
 
-    <div class="add-row">
-      <input id="item-input" type="text" placeholder="Lägg till vara … (t.ex. kaffe)" />
-      <button id="voice-button" type="button">🎤</button>
-      <button id="add-button" type="button">Lägg till</button>
-    </div>
+      <div class="add-row">
+        <input id="item-input" type="text" placeholder="Lägg till vara … (t.ex. kaffe)" />
+        <button id="voice-button" type="button" class="btn btn-voice">🎤</button>
+        <button id="add-button" type="button" class="btn btn-primary">Lägg till</button>
+      </div>
 
-    <div id="voice-status" class="voice-status"></div>
+      <div id="voice-status" class="voice-status"></div>
 
-    <div class="sort-row">
-      <span class="label">Sortera “Behövs nu”:</span>
-      <button id="sort-name-btn" class="sort-btn sort-btn-active" type="button">A–Ö</button>
-      <button id="sort-updated-btn" class="sort-btn" type="button">Senast ändrad</button>
-    </div>
+      <div class="toolbar">
+        <div class="sort-row">
+          <span class="sort-label">Sortera “Behövs nu”:</span>
+          <button id="sort-name-btn" class="sort-btn sort-btn-active" type="button">A–Ö</button>
+          <button id="sort-updated-btn" class="sort-btn" type="button">Senast ändrad</button>
+        </div>
+        <button id="clear-all-btn" type="button" class="btn btn-ghost">
+          ✅ Allt klart
+        </button>
+      </div>
 
-    <div class="section">
-      <h2>Behövs nu</h2>
-      <div id="active-list" class="item-list"></div>
-    </div>
+      <div class="section">
+        <h2>Behövs nu</h2>
+        <div id="active-list" class="item-list"></div>
+      </div>
 
-    <div class="section">
-      <h2>Senast använda</h2>
-      <div id="recent-list" class="pill-row"></div>
+      <div class="section">
+        <h2>Senast använda</h2>
+        <div id="recent-list" class="pill-row"></div>
+      </div>
     </div>
   </div>
 
