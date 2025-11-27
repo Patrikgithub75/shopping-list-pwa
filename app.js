@@ -1,4 +1,4 @@
-// app.js – Familjens inköpslista: Firebase-synk, sortering, röstinmatning, "Allt klart"
+// app.js â€“ Familjens inkÃ¶pslista: Firebase-synk, sortering, rÃ¶stinmatning, "Allt klart"
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import {
@@ -31,7 +31,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// Samma hushåll som i städ-appen
+// Samma hushÃ¥ll som i stÃ¤d-appen
 const HOUSEHOLD_ID = "family1";
 
 const householdDocRef = doc(db, "households", HOUSEHOLD_ID);
@@ -48,11 +48,11 @@ const sortNameBtn = document.getElementById("sort-name-btn");
 const sortUpdatedBtn = document.getElementById("sort-updated-btn");
 const clearAllBtn = document.getElementById("clear-all-btn");
 
-// ---------- Sorteringsläge ----------
+// ---------- SorteringslÃ¤ge ----------
 let currentSortMode = "name"; // "name" eller "updated"
 let latestItems = [];
 
-// ---------- Röstinmatning ----------
+// ---------- RÃ¶stinmatning ----------
 let recognition = null;
 let isListening = false;
 
@@ -62,7 +62,7 @@ function setupVoice() {
 
   if (!SpeechRecognition) {
     voiceStatusEl.textContent =
-      "Tips: använd mikrofon-knappen på iPhone-tangentbordet för röstinmatning.";
+      "Tips: anvÃ¤nd mikrofon-knappen pÃ¥ iPhone-tangentbordet fÃ¶r rÃ¶stinmatning.";
     return;
   }
 
@@ -74,7 +74,7 @@ function setupVoice() {
   recognition.onstart = () => {
     isListening = true;
     voiceButtonEl.textContent = "?";
-    voiceStatusEl.textContent = "Lyssnar … prata nu.";
+    voiceStatusEl.textContent = "Lyssnar â€¦ prata nu.";
   };
 
   recognition.onend = () => {
@@ -86,7 +86,7 @@ function setupVoice() {
   };
 
   recognition.onerror = (event) => {
-    console.error("Röstfel:", event.error);
+    console.error("RÃ¶stfel:", event.error);
     voiceStatusEl.textContent =
       "Kunde inte lyssna (fel: " + event.error + ").";
     isListening = false;
@@ -103,13 +103,13 @@ function setupVoice() {
   };
 }
 
-// ---------- Hjälpfunktioner ----------
+// ---------- HjÃ¤lpfunktioner ----------
 function slugify(text) {
   return text
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "_")
-    .replace(/[^a-z0-9_åäö]/g, "");
+    .replace(/[^a-z0-9_Ã¥Ã¤Ã¶]/g, "");
 }
 
 function renderLists(items) {
@@ -128,11 +128,12 @@ function renderLists(items) {
     active.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
   }
 
-  // Behövs nu
+  // BehÃ¶vs nu
   activeListEl.innerHTML = "";
   if (active.length === 0) {
     activeListEl.innerHTML =
-      '<div class="empty-text">Inget behövs just nu. Lägg till något ovanför eller återaktivera från “Senast använda”.</div>';
+      '<div class="empty-text">Inget behÃ¶vs just nu. LÃ¤gg till nÃ¥got ovanfÃ¶r eller Ã¥teraktivera frÃ¥n "Senast anvÃ¤nda".</div>';
+
   } else {
     active.forEach((item) => {
       const row = document.createElement("div");
@@ -154,11 +155,11 @@ function renderLists(items) {
     });
   }
 
-  // Senast använda
+  // Senast anvÃ¤nda
   recentListEl.innerHTML = "";
   if (inactive.length === 0) {
     recentListEl.innerHTML =
-      '<div class="empty-text">Här hamnar varor du bockar av, t.ex. kaffe och toalettpapper.</div>';
+      '<div class="empty-text">HÃ¤r hamnar varor du bockar av, t.ex. kaffe och toalettpapper.</div>';
   } else {
     inactive.forEach((item) => {
       const pill = document.createElement("div");
@@ -206,7 +207,7 @@ async function toggleNeeded(id, needed) {
   );
 }
 
-// "Allt klart" – bocka av alla aktiva
+// "Allt klart" â€“ bocka av alla aktiva
 async function markAllDone() {
   const toUpdate = latestItems.filter((i) => i.needed);
   if (toUpdate.length === 0) return;
@@ -266,7 +267,7 @@ inputEl.addEventListener("keyup", (e) => {
 
 voiceButtonEl.addEventListener("click", () => {
   if (!recognition) {
-    // inget Web Speech, gör inget (texten ovan tipsar om tangentbordsmic)
+    // inget Web Speech, gÃ¶r inget (texten ovan tipsar om tangentbordsmic)
     return;
   }
   if (isListening) {
@@ -301,5 +302,6 @@ clearAllBtn.addEventListener("click", () => {
   markAllDone();
 });
 
-// ---------- Kör appen ----------
+// ---------- KÃ¶r appen ----------
 startApp();
+
