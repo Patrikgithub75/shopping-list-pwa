@@ -1,6 +1,8 @@
 // service-worker.js – shopping-list-pwa
 
-const CACHE_NAME = "shopping-list-pwa-v2";  // <-- ny version
+
+const CACHE_NAME = "shopping-cache-" + Date.now();
+
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
@@ -33,3 +35,4 @@ self.addEventListener("fetch", event => {
     caches.match(event.request).then(response => response || fetch(event.request))
   );
 });
+
