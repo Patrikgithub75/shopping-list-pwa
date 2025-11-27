@@ -217,7 +217,7 @@ async function updateBitcoinPrice() {
   try {
     // CoinGecko: pris i SEK
     const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=sek"
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
     );
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
@@ -285,6 +285,10 @@ function startApp() {
   });
 
   setupVoice();
+  // starta BTC-ticker
+  updateBitcoinPrice();                // direkt
+  setInterval(updateBitcoinPrice, 10000); // uppdatera varje 10s
+
 }
 
 // ---------- UI handlers ----------
@@ -334,5 +338,6 @@ clearAllBtn.addEventListener("click", () => {
 
 // ---------- Kör appen ----------
 startApp();
+
 
 
