@@ -72,7 +72,25 @@
       display: flex;
       gap: 0.4rem;
       margin-bottom: 0.45rem;
+      align-items: center;
     }
+    
+    /* Mobilanpassning av input + knappar */
+    @media (max-width: 600px) {
+      .add-row {
+        flex-wrap: wrap;
+      }
+    
+      .add-row input {
+        flex: 1 1 100%;      /* input tar hela bredden högst upp */
+      }
+    
+      .add-row #voice-button,
+      .add-row #add-button {
+        flex: 0 0 auto;      /* knapparna får egen rad om det behövs */
+      }
+    }
+
     .add-row input {
       flex: 1;
       padding: 0.55rem 0.7rem;
@@ -220,7 +238,11 @@
       flex-wrap: wrap;
       gap: 0.35rem;
     }
+    
     .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 0.22rem 0.6rem;
       border-radius: 999px;
       background: #e0e7ff;
@@ -228,7 +250,9 @@
       font-size: 0.82rem;
       cursor: pointer;
       color: #312e81;
+      white-space: nowrap;   /* ordet håller ihop */
     }
+
 
     .empty-text {
       font-size: 0.83rem;
@@ -318,6 +342,7 @@
   </script>
 </body>
 </html>
+
 
 
 
