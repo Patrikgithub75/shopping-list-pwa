@@ -47,6 +47,7 @@ const recentListEl = document.getElementById("recent-list");
 const sortNameBtn = document.getElementById("sort-name-btn");
 const sortUpdatedBtn = document.getElementById("sort-updated-btn");
 const clearAllBtn = document.getElementById("clear-all-btn");
+const btcTickerEl = document.getElementById("btc-ticker");
 
 // ---------- Sorteringsläge ----------
 let currentSortMode = "name"; // "name" eller "updated"
@@ -206,6 +207,35 @@ async function toggleNeeded(id, needed) {
     { merge: true }
   );
 }
+// ---------- Bitcoin-ticker ----------
+async function updateBitcoinPrice() {
+  if (!btcTickerEl) return;
+
+  const valueSpan = btcTickerEl.querySelector(".value");
+  if (!valueSpan) return;
+
+  try {
+    // CoinGecko: pris i SEK
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=sek"
+    );
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    const price = data?.bitcoin?.sek;
+    if (typeof price === "number") {
+      // formatera ungefär: 1 082 350 kr
+      valueSpan.textContent =
+        price.toLocaleString("sv-SE", {
+          maximumFractionDigits: 0
+        }) + " kr";
+    } else {
+      valueSpan.textContent = "okänt";
+    }
+  } catch (err) {
+    console.error("BTC ticker error:", err);
+    valueSpan.textContent = "offline";
+  }
+}
 
 // "Allt klart" – bocka av alla aktiva
 async function markAllDone() {
@@ -304,4 +334,5 @@ clearAllBtn.addEventListener("click", () => {
 
 // ---------- Kör appen ----------
 startApp();
+
 
