@@ -254,9 +254,18 @@
   <div class="page-wrap">
     <div class="app-card">
       <div class="app-header">
-        <h1>Familjens inköpslista</h1>
-        <div class="badge">Delad lista</div>
+        <div>
+          <h1>Inköpslista</h1>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.25rem;">
+          <div class="badge">Delad lista</div>
+          <div id="btc-ticker" class="btc-ticker">
+            <span>BTC:</span>
+            <span class="value">…</span>
+          </div>
+        </div>
       </div>
+
       <div class="info">
         Lägg till saker som <b>kaffe</b>, <b>toalettpapper</b> osv.
         Alla i familjen kan ändra listan i realtid.
@@ -305,6 +314,7 @@
   </script>
 </body>
 </html>
+
 
 
 
