@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <title>Familjens inköpslista</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#007aff" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f4f4f4;
+    }
+    .app {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 0.3rem;
+    }
+    .info {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+    .add-row {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+    .add-row input {
+      flex: 1;
+      padding: 0.55rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    .add-row button {
+      border: none;
+      padding: 0.55rem 0.9rem;
+      border-radius: 8px;
+      background: #007aff;
+      color: #fff;
+      font-size: 0.9rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .add-row button:active {
+      transform: scale(0.97);
+    }
+    h2 {
+      font-size: 1.05rem;
+      margin: 0.8rem 0 0.4rem;
+    }
+    .section {
+      margin-bottom: 1rem;
+    }
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      background: #ffffff;
+    }
+    .item span {
+      flex: 1;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+    .item input[type="checkbox"] {
+      margin-right: 0.6rem;
+      width: 18px;
+      height: 18px;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .pill {
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: #e0eaff;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>Familjens inköpslista</h1>
+    <div class="info">
+      Lägg till saker som <b>kaffe</b>, <b>toalettpapper</b> osv.<br>
+      Alla i familjen kan lägga till/ticka av i realtid.
+    </div>
+
+    <div class="add-row">
+      <input id="item-input" type="text" placeholder="Lägg till vara... (t.ex. kaffe)" />
+      <button id="add-button">Lägg till</button>
+    </div>
+
+    <div class="section">
+      <h2>Behövs nu</h2>
+      <div id="active-list" class="item-list"></div>
+    </div>
+
+    <div class="section">
+      <h2>Senast använda</h2>
+      <div id="recent-list" class="pill-row"></div>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(err => {
+          console.error("Service worker registration failed:", err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
