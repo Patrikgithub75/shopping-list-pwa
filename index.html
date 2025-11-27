@@ -217,17 +217,23 @@
       color: #6b7280;
     }
 
-    @media (max-width: 480px) {
-      .app-card {
-        padding: 0.9rem 0.85rem 1.1rem;
-        border-radius: 0;
-        box-shadow: none;
-      }
-      .toolbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
+@media (max-width: 600px) {
+  .page-wrap {
+    padding: 0;              /* inga marginaler runt */
+  }
+  .app-card {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;       /* fyll hela höjden */
+    border-radius: 0;        /* inga rundade hörn på mobilen */
+    box-shadow: none;        /* ingen skugga – ser mer native ut */
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -285,3 +291,4 @@
   </script>
 </body>
 </html>
+
