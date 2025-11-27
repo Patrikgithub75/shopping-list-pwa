@@ -1,11 +1,13 @@
-const CACHE_NAME = "shopping-list-pwa-v1";
+// service-worker.js – shopping-list-pwa
+
+const CACHE_NAME = "shopping-list-pwa-v2";  // <-- ny version
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./app.js",
-  "./manifest.json"
-  // "./icon-192.png",
-  // "./icon-512.png"
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.jpg"   // ändra till .png om du byter senare
 ];
 
 self.addEventListener("install", event => {
